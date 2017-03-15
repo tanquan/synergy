@@ -20,12 +20,12 @@
 #include "ProcessorArch.h"
 
 #include <QComboBox>
-#include <QVariant>
 #include <QCryptographicHash>
 #include <QNetworkInterface>
+#include <QVariant>
 
-void setIndexFromItemData(QComboBox* comboBox, const QVariant& itemData);
-QString hash(const QString& string);
-QString getFirstMacAddress();
-qProcessorArch getProcessorArch();
-QString getOSInformation();
+void setIndexFromItemData (QComboBox* comboBox, const QVariant& itemData);
+QString hash (const QString& string);
+QString getFirstMacAddress ();
+qProcessorArch getProcessorArch ();
+QString getOSInformation ();

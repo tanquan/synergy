@@ -21,19 +21,19 @@
 #define MAINWINDOW__H
 
 #include <QMainWindow>
-#include <QSystemTrayIcon>
-#include <QSettings>
 #include <QProcess>
+#include <QSettings>
+#include <QSystemTrayIcon>
 #include <QThread>
 
 #include "ui_MainWindowBase.h"
 
-#include "ServerConfig.h"
-#include "AppConfig.h"
-#include "VersionChecker.h"
-#include "IpcClient.h"
-#include "Ipc.h"
 #include "ActivationDialog.h"
+#include "AppConfig.h"
+#include "Ipc.h"
+#include "IpcClient.h"
+#include "ServerConfig.h"
+#include "VersionChecker.h"
 
 #include <QMutex>
 
@@ -58,8 +58,7 @@ class CommandProcess;
 class SslCertificate;
 class LicenseManager;
 
-class MainWindow : public QMainWindow, public Ui::MainWindowBase
-{
+class MainWindow : public QMainWindow, public Ui::MainWindowBase {
     Q_OBJECT
 
     friend class QSynergyApplication;
@@ -67,157 +66,176 @@ class MainWindow : public QMainWindow, public Ui::MainWindowBase
     friend class ActivationDialog;
     friend class SettingsDialog;
 
-    public:
-        enum qSynergyState
-        {
-            synergyDisconnected,
-            synergyConnecting,
-            synergyConnected,
-            synergyTransfering
-        };
+public:
+    enum qSynergyState {
+        synergyDisconnected,
+        synergyConnecting,
+        synergyConnected,
+        synergyTransfering
+    };
 
-        enum qSynergyType
-        {
-            synergyClient,
-            synergyServer
-        };
+    enum qSynergyType { synergyClient, synergyServer };
 
-        enum qLevel {
-            Error,
-            Info
-        };
+    enum qLevel { Error, Info };
 
-        enum qRuningState {
-            kStarted,
-            kStopped
-        };
+    enum qRuningState { kStarted, kStopped };
 
-    public:
-        MainWindow(QSettings& settings, AppConfig& appConfig,
-                   LicenseManager& licenseManager);
-        ~MainWindow();
+public:
+    MainWindow (QSettings& settings, AppConfig& appConfig,
+                LicenseManager& licenseManager);
+    ~MainWindow ();
 
-    public:
-        void setVisible(bool visible);
-        int synergyType() const { return m_pGroupClient->isChecked() ? synergyClient : synergyServer; }
-        int synergyState() const { return m_SynergyState; }
-        QString hostname() const { return m_pLineEditHostname->text(); }
-        QString configFilename();
-        QString address();
-        QString appPath(const QString& name);
-        void open();
-        void clearLog();
-        VersionChecker& versionChecker() { return m_VersionChecker; }
-        QString getScreenName();
-        ServerConfig& serverConfig() { return m_ServerConfig; }
-        void showConfigureServer(const QString& message);
-        void showConfigureServer() { showConfigureServer(""); }
-        void updateLocalFingerprint();
-        LicenseManager& licenseManager() const;
+public:
+    void setVisible (bool visible);
+    int
+    synergyType () const {
+        return m_pGroupClient->isChecked () ? synergyClient : synergyServer;
+    }
+    int
+    synergyState () const {
+        return m_SynergyState;
+    }
+    QString
+    hostname () const {
+        return m_pLineEditHostname->text ();
+    }
+    QString configFilename ();
+    QString address ();
+    QString appPath (const QString& name);
+    void open ();
+    void clearLog ();
+    VersionChecker&
+    versionChecker () {
+        return m_VersionChecker;
+    }
+    QString getScreenName ();
+    ServerConfig&
+    serverConfig () {
+        return m_ServerConfig;
+    }
+    void showConfigureServer (const QString& message);
+    void
+    showConfigureServer () {
+        showConfigureServer ("");
+    }
+    void updateLocalFingerprint ();
+    LicenseManager& licenseManager () const;
 
-        int raiseActivationDialog();
+    int raiseActivationDialog ();
 
 public slots:
-        void setEdition(Edition edition);
-        void beginTrial(bool isExpiring);
-        void endTrial(bool isExpired);
-        void appendLogRaw(const QString& text);
-        void appendLogInfo(const QString& text);
-        void appendLogDebug(const QString& text);
-        void appendLogError(const QString& text);
-        void startSynergy();
+    void setEdition (Edition edition);
+    void beginTrial (bool isExpiring);
+    void endTrial (bool isExpired);
+    void appendLogRaw (const QString& text);
+    void appendLogInfo (const QString& text);
+    void appendLogDebug (const QString& text);
+    void appendLogError (const QString& text);
+    void startSynergy ();
 
-    protected slots:
-        void sslToggled(bool enabled);
-        void on_m_pGroupClient_toggled(bool on);
-        void on_m_pGroupServer_toggled(bool on);
-        bool on_m_pButtonBrowseConfigFile_clicked();
-        void on_m_pButtonConfigureServer_clicked();
-        bool on_m_pActionSave_triggered();
-        void on_m_pActionAbout_triggered();
-        void on_m_pActionSettings_triggered();
-        void on_m_pActivate_triggered();
-        void synergyFinished(int exitCode, QProcess::ExitStatus);
-        void trayActivated(QSystemTrayIcon::ActivationReason reason);
-        void stopSynergy();
-        void logOutput();
-        void logError();
-        void updateFound(const QString& version);
+protected slots:
+    void sslToggled (bool enabled);
+    void on_m_pGroupClient_toggled (bool on);
+    void on_m_pGroupServer_toggled (bool on);
+    bool on_m_pButtonBrowseConfigFile_clicked ();
+    void on_m_pButtonConfigureServer_clicked ();
+    bool on_m_pActionSave_triggered ();
+    void on_m_pActionAbout_triggered ();
+    void on_m_pActionSettings_triggered ();
+    void on_m_pActivate_triggered ();
+    void synergyFinished (int exitCode, QProcess::ExitStatus);
+    void trayActivated (QSystemTrayIcon::ActivationReason reason);
+    void stopSynergy ();
+    void logOutput ();
+    void logError ();
+    void updateFound (const QString& version);
 
-    protected:
-        QSettings& settings() { return m_Settings; }
-        AppConfig& appConfig() { return *m_AppConfig; }
-        QProcess* synergyProcess() { return m_pSynergy; }
-        void setSynergyProcess(QProcess* p) { m_pSynergy = p; }
-        void initConnections();
-        void createMenuBar();
-        void createStatusBar();
-        void createTrayIcon();
-        void loadSettings();
-        void saveSettings();
-        void setIcon(qSynergyState state);
-        void setSynergyState(qSynergyState state);
-        bool checkForApp(int which, QString& app);
-        bool clientArgs(QStringList& args, QString& app);
-        bool serverArgs(QStringList& args, QString& app);
-        void setStatus(const QString& status);
-        void sendIpcMessage(qIpcMessageType type, const char* buffer, bool showErrors);
-        void onModeChanged(bool startDesktop, bool applyService);
-        void updateFromLogLine(const QString& line);
-        QString getIPAddresses();
-        void stopService();
-        void stopDesktop();
-        void changeEvent(QEvent* event);
-        void retranslateMenuBar();
+protected:
+    QSettings&
+    settings () {
+        return m_Settings;
+    }
+    AppConfig&
+    appConfig () {
+        return *m_AppConfig;
+    }
+    QProcess*
+    synergyProcess () {
+        return m_pSynergy;
+    }
+    void
+    setSynergyProcess (QProcess* p) {
+        m_pSynergy = p;
+    }
+    void initConnections ();
+    void createMenuBar ();
+    void createStatusBar ();
+    void createTrayIcon ();
+    void loadSettings ();
+    void saveSettings ();
+    void setIcon (qSynergyState state);
+    void setSynergyState (qSynergyState state);
+    bool checkForApp (int which, QString& app);
+    bool clientArgs (QStringList& args, QString& app);
+    bool serverArgs (QStringList& args, QString& app);
+    void setStatus (const QString& status);
+    void
+    sendIpcMessage (qIpcMessageType type, const char* buffer, bool showErrors);
+    void onModeChanged (bool startDesktop, bool applyService);
+    void updateFromLogLine (const QString& line);
+    QString getIPAddresses ();
+    void stopService ();
+    void stopDesktop ();
+    void changeEvent (QEvent* event);
+    void retranslateMenuBar ();
 #if defined(Q_OS_WIN)
-        bool isServiceRunning(QString name);
+    bool isServiceRunning (QString name);
 #else
-        bool isServiceRunning();
+    bool isServiceRunning ();
 #endif
-        QString getProfileRootForArg();
-        void checkConnected(const QString& line);
-        void checkLicense(const QString& line);
-        void checkFingerprint(const QString& line);
-        bool autoHide();
-        QString getTimeStamp();
-        void restartSynergy();
-        void proofreadInfo();
+    QString getProfileRootForArg ();
+    void checkConnected (const QString& line);
+    void checkLicense (const QString& line);
+    void checkFingerprint (const QString& line);
+    bool autoHide ();
+    QString getTimeStamp ();
+    void restartSynergy ();
+    void proofreadInfo ();
 
-        void showEvent (QShowEvent*);
+    void showEvent (QShowEvent*);
 
-    private:
-        QSettings& m_Settings;
-        AppConfig* m_AppConfig;
-        LicenseManager* m_LicenseManager;
-        QProcess* m_pSynergy;
-        int m_SynergyState;
-        ServerConfig m_ServerConfig;
-        QTemporaryFile* m_pTempConfigFile;
-        QSystemTrayIcon* m_pTrayIcon;
-        QMenu* m_pTrayIconMenu;
-        bool m_AlreadyHidden;
-        VersionChecker m_VersionChecker;
-        IpcClient m_IpcClient;
-        QMenuBar* m_pMenuBar;
-        QMenu* m_pMenuFile;
-        QMenu* m_pMenuEdit;
-        QMenu* m_pMenuWindow;
-        QMenu* m_pMenuHelp;
-        DataDownloader* m_pDataDownloader;
-        QAbstractButton* m_pCancelButton;
-        bool m_SuppressEmptyServerWarning;
-        qRuningState m_ExpectedRunningState;
-        QMutex m_StopDesktopMutex;
-        SslCertificate* m_pSslCertificate;
-        bool m_ActivationDialogRunning;
+private:
+    QSettings& m_Settings;
+    AppConfig* m_AppConfig;
+    LicenseManager* m_LicenseManager;
+    QProcess* m_pSynergy;
+    int m_SynergyState;
+    ServerConfig m_ServerConfig;
+    QTemporaryFile* m_pTempConfigFile;
+    QSystemTrayIcon* m_pTrayIcon;
+    QMenu* m_pTrayIconMenu;
+    bool m_AlreadyHidden;
+    VersionChecker m_VersionChecker;
+    IpcClient m_IpcClient;
+    QMenuBar* m_pMenuBar;
+    QMenu* m_pMenuFile;
+    QMenu* m_pMenuEdit;
+    QMenu* m_pMenuWindow;
+    QMenu* m_pMenuHelp;
+    DataDownloader* m_pDataDownloader;
+    QAbstractButton* m_pCancelButton;
+    bool m_SuppressEmptyServerWarning;
+    qRuningState m_ExpectedRunningState;
+    QMutex m_StopDesktopMutex;
+    SslCertificate* m_pSslCertificate;
+    bool m_ActivationDialogRunning;
 
 private slots:
-    void on_m_pButtonApply_clicked();
-    void on_windowShown();
+    void on_m_pButtonApply_clicked ();
+    void on_windowShown ();
 
 signals:
-    void windowShown();
+    void windowShown ();
 };
 
 #endif
-

@@ -17,18 +17,18 @@
 
 #pragma once
 
-#include "synergy/ArgsBase.h"
 #include "shared/SerialKey.h"
+#include "synergy/ArgsBase.h"
 
 class NetworkAddress;
 class Config;
 
 class ServerArgs : public ArgsBase {
 public:
-    ServerArgs();
+    ServerArgs ();
 
 public:
-    String                m_configFile;
-    SerialKey            m_serial;
-    Config*                m_config;
+    String m_configFile;
+    SerialKey m_serial;
+    Config* m_config;
 };
